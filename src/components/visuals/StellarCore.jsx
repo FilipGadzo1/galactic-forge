@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { MeshWobbleMaterial } from '@react-three/drei';
-import { useGameStore } from '../store/useGameStore';
+import { useGameStore } from '../../store/useGameStore';
 
 export default function StellarCore({ onClickCore, ...props }) {
   const meshRef = useRef();

@@ -2,6 +2,8 @@ export const UPGRADE_CONFIG = {
   clickPower: {
     label: 'Click Power',
     description: 'Increase energy per click',
+    icon: '🖱️',
+    color: 'text-cyan-300',
     baseCost: 15,
     scaling: 2.5,
     stateKeys: {
@@ -13,6 +15,8 @@ export const UPGRADE_CONFIG = {
   generator: {
     label: 'Auto Generator',
     description: 'Generate energy automatically',
+    icon: '⚙️',
+    color: 'text-yellow-300',
     baseCost: 50,
     scaling: 2.5,
     stateKeys: {
@@ -24,6 +28,8 @@ export const UPGRADE_CONFIG = {
   speed: {
     label: 'Auto Click Speed',
     description: 'Increase generator frequency',
+    icon: '⏱️',
+    color: 'text-pink-300',
     baseCost: 100,
     scaling: 2.5,
     stateKeys: {

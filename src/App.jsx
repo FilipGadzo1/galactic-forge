@@ -1,9 +1,9 @@
 import Experience from './canvas/Experience';
 import { useGameStore } from './store/useGameStore';
-import UpgradePanel from './components/UpgradePanel';
 import { useEffect, useState } from 'react';
 import { formatNumber } from './utils/formatNumber';
-import ClickFeedback from './components/ClickFeedback';
+import ClickFeedback from './components/ui/ClickFeedback';
+import UpgradePanel from './components/panels/UpgradePanel';
 
 function App() {
   const energy = useGameStore((state) => state.energy);

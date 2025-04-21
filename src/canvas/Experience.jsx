@@ -1,6 +1,6 @@
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stars } from '@react-three/drei';
-import StellarCore from '../components/StellarCore';
+import StellarCore from '../components/visuals/StellarCore';
 
 export default function Experience({ onClickCore }) {
   return (

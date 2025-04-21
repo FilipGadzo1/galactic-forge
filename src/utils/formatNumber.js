@@ -1,6 +1,6 @@
 export function formatNumber(value) {
   const suffixes = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc'];
-  const tier = (Math.log10(Math.abs(value)) / 3) | 0;
+  const tier = Math.floor(Math.log10(Math.abs(value)) / 3);
 
   if (tier === 0) return value.toString();
 

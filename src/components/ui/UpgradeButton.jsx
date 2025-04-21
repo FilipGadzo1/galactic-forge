@@ -1,6 +1,6 @@
-import { formatNumber } from '../utils/formatNumber';
+import { formatNumber } from '../../utils/formatNumber';
 
-export default function UpgradeButton({ title, description, level, value, cost, onClick, disabled }) {
+export default function UpgradeButton({ title, description, level, value, cost, onClick, disabled, icon, color }) {
   const isAffordable = !disabled;
 
   return (
@@ -11,10 +11,15 @@ export default function UpgradeButton({ title, description, level, value, cost, 
       `}
     >
       <div className="flex-1 pr-3">
-        <div className="font-semibold text-sm text-white">{title}</div>
+        <div className={`font-semibold text-sm ${color || 'text-white'}`}>
+          {icon && <span className="mr-1">{icon}</span>}
+          {title}
+        </div>
         <div className="text-xs text-white/60">{description}</div>
-        <div className="text-xs mt-1 text-cyan-300">
-          Level {level} • {value}
+        <div className="mt-1 flex gap-2 text-xs text-cyan-300">
+          <span className="font-medium">Level {level}</span>
+          <span className="opacity-70">|</span>
+          <span>{value}</span>
         </div>
       </div>
       <button

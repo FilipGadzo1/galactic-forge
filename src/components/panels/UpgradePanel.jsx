@@ -1,7 +1,9 @@
-import UpgradeButton from './UpgradeButton';
-import { useUpgradeData } from '../hooks/useUpgradeData';
+import UpgradeButton from '../ui/UpgradeButton';
+import { useGameStore } from '../../store/useGameStore';
+import { useUpgradeData } from '../../hooks/useUpgradeData';
 
 export default function UpgradePanel() {
+  const energy = useGameStore((s) => s.energy);
   const upgrades = useUpgradeData();
 
   return (
@@ -17,7 +19,7 @@ export default function UpgradePanel() {
           value={u.value}
           cost={u.cost}
           onClick={u.onClick}
-          disabled={u.disabled}
+          disabled={energy < u.cost}
         />
       ))}
     </div>

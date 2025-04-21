@@ -1,4 +1,4 @@
-import { UPGRADE_CONFIG } from './upgradeConfig';
+import { UPGRADE_CONFIG } from '../constants/upgradeConfig';
 
 export function getUpgradeCost(type, level) {
   const config = UPGRADE_CONFIG[type];

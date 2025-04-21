@@ -1,12 +1,10 @@
 import { useGameStore } from '../store/useGameStore';
 import { getUpgradeCost } from '../utils/helpers';
-import { UPGRADE_CONFIG } from '../utils/upgradeConfig';
+import { UPGRADE_CONFIG } from '../constants/upgradeConfig';
 
 export function useUpgradeData() {
-  const energy = useGameStore((s) => s.energy);
-
-  const upgradeLevel = useGameStore((s) => s.upgradeLevel);
   const energyPerClick = useGameStore((s) => s.energyPerClick);
+  const upgradeLevel = useGameStore((s) => s.upgradeLevel);
   const generatorLevel = useGameStore((s) => s.generatorLevel);
   const autoEnergyPerSecond = useGameStore((s) => s.autoEnergyPerSecond);
   const generatorSpeedLevel = useGameStore((s) => s.generatorSpeedLevel);
@@ -47,7 +45,8 @@ export function useUpgradeData() {
       value: formattedValue,
       cost,
       onClick,
-      disabled: energy < cost,
+      icon: config.icon,
+      color: config.color,
     };
   });
 }
