@@ -1,4 +1,8 @@
 import { create } from 'zustand';
+import { createClickSlice } from './slices/clickSlice';
+import { createUpgradeSlice } from './slices/upgradeSlice';
+import { createGeneratorSlice } from './slices/generatorSlice';
+import { createTickSlice } from './slices/tickSlice';
 
 const STORAGE_KEY = 'galactic-forge-save';
 
@@ -44,67 +48,13 @@ export const useGameStore = create((set, get) => {
   return {
     ...initialState,
 
-    addEnergy: () =>
-      set((state) => {
-        const updated = { energy: state.energy + state.energyPerClick };
-        saveToLocalStorage({ ...state, ...updated });
-        return updated;
-      }),
+    // helpers
+    save: () => saveToLocalStorage(get()),
 
-    purchaseUpgrade: () =>
-      set((state) => {
-        const cost = Math.floor(15 * 2.5 ** state.upgradeLevel);
-        if (state.energy < cost) return state;
-
-        const updated = {
-          energy: state.energy - cost,
-          energyPerClick: state.energyPerClick + 1,
-          upgradeLevel: state.upgradeLevel + 1,
-        };
-        saveToLocalStorage({ ...state, ...updated });
-        return updated;
-      }),
-
-    purchaseGenerator: () =>
-      set((state) => {
-        const cost = Math.floor(50 * 2.5 ** state.generatorLevel);
-        if (state.energy < cost) return state;
-
-        const updated = {
-          energy: state.energy - cost,
-          generatorLevel: state.generatorLevel + 1,
-          autoEnergyPerSecond: state.autoEnergyPerSecond + 1,
-        };
-        saveToLocalStorage({ ...state, ...updated });
-        return updated;
-      }),
-
-    purchaseGeneratorSpeed: () =>
-      set((state) => {
-        const cost = Math.floor(100 * 2.5 ** state.generatorSpeedLevel);
-        if (state.energy < cost) return state;
-
-        const newSpeedLevel = state.generatorSpeedLevel + 1;
-        const newInterval = Math.floor(1000 * 0.8 ** newSpeedLevel);
-
-        const updated = {
-          energy: state.energy - cost,
-          generatorSpeedLevel: newSpeedLevel,
-          generatorInterval: newInterval,
-        };
-        saveToLocalStorage({ ...state, ...updated });
-        return updated;
-      }),
-
-    tick: () => {
-      const { autoEnergyPerSecond } = get();
-      if (autoEnergyPerSecond > 0) {
-        set((state) => {
-          const updated = { energy: state.energy + autoEnergyPerSecond };
-          saveToLocalStorage({ ...state, ...updated });
-          return updated;
-        });
-      }
-    },
+    // slices
+    ...createClickSlice(set, get),
+    ...createUpgradeSlice(set, get),
+    ...createGeneratorSlice(set, get),
+    ...createTickSlice(set, get),
   };
 });
