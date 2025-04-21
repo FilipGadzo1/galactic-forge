@@ -7,8 +7,9 @@ import ClickFeedback from './components/ClickFeedback';
 
 function App() {
   const energy = useGameStore((state) => state.energy);
-
   const generatorInterval = useGameStore((state) => state.generatorInterval);
+
+  const [clicks, setClicks] = useState([]);
 
   useEffect(() => {
     const tick = () => useGameStore.getState().tick();
@@ -17,7 +18,25 @@ function App() {
     return () => clearInterval(interval);
   }, [generatorInterval]);
 
-  const [clicks, setClicks] = useState([]);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const state = useGameStore.getState();
+      localStorage.setItem(
+        'galactic-forge-save',
+        JSON.stringify({
+          energy: state.energy,
+          energyPerClick: state.energyPerClick,
+          upgradeLevel: state.upgradeLevel,
+          generatorLevel: state.generatorLevel,
+          autoEnergyPerSecond: state.autoEnergyPerSecond,
+          generatorSpeedLevel: state.generatorSpeedLevel,
+          generatorInterval: state.generatorInterval,
+        })
+      );
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   function spawnClickFeedback(domEvent, value) {
     if (!domEvent) return;

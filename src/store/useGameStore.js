@@ -1,66 +1,110 @@
 import { create } from 'zustand';
 
-export const useGameStore = create((set, get) => ({
-  energy: 0,
-  energyPerClick: 1,
-  upgradeLevel: 0,
+const STORAGE_KEY = 'galactic-forge-save';
 
-  generatorLevel: 0,
-  autoEnergyPerSecond: 0,
+function saveToLocalStorage(state) {
+  const saveData = {
+    energy: state.energy,
+    energyPerClick: state.energyPerClick,
+    upgradeLevel: state.upgradeLevel,
+    generatorLevel: state.generatorLevel,
+    autoEnergyPerSecond: state.autoEnergyPerSecond,
+    generatorSpeedLevel: state.generatorSpeedLevel,
+    generatorInterval: state.generatorInterval,
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(saveData));
+}
 
-  generatorSpeedLevel: 0,
-  generatorInterval: 1000,
+function loadFromLocalStorage() {
+  try {
+    const data = localStorage.getItem(STORAGE_KEY);
+    return data ? JSON.parse(data) : null;
+  } catch (err) {
+    console.error('Failed to load save:', err);
+    return null;
+  }
+}
 
-  addEnergy: () =>
-    set((state) => ({
-      energy: state.energy + state.energyPerClick,
-    })),
+export const useGameStore = create((set, get) => {
+  const initialState = {
+    energy: 0,
+    energyPerClick: 1,
+    upgradeLevel: 0,
 
-  purchaseUpgrade: () =>
-    set((state) => {
-      const cost = Math.floor(15 * 2.5 ** state.upgradeLevel);
-      if (state.energy < cost) return state;
+    generatorLevel: 0,
+    autoEnergyPerSecond: 0,
 
-      return {
-        energy: state.energy - cost,
-        energyPerClick: state.energyPerClick + 1,
-        upgradeLevel: state.upgradeLevel + 1,
-      };
-    }),
+    generatorSpeedLevel: 0,
+    generatorInterval: 1000,
+  };
 
-  purchaseGenerator: () =>
-    set((state) => {
-      const cost = Math.floor(50 * 2.5 ** state.generatorLevel);
-      if (state.energy < cost) return state;
+  const saved = loadFromLocalStorage();
+  if (saved) Object.assign(initialState, saved);
 
-      return {
-        energy: state.energy - cost,
-        generatorLevel: state.generatorLevel + 1,
-        autoEnergyPerSecond: state.autoEnergyPerSecond + 1,
-      };
-    }),
+  return {
+    ...initialState,
 
-  purchaseGeneratorSpeed: () =>
-    set((state) => {
-      const cost = Math.floor(100 * 2.5 ** state.generatorSpeedLevel);
-      if (state.energy < cost) return state;
+    addEnergy: () =>
+      set((state) => {
+        const updated = { energy: state.energy + state.energyPerClick };
+        saveToLocalStorage({ ...state, ...updated });
+        return updated;
+      }),
 
-      const newSpeedLevel = state.generatorSpeedLevel + 1;
-      const newInterval = Math.floor(1000 * 0.8 ** newSpeedLevel);
+    purchaseUpgrade: () =>
+      set((state) => {
+        const cost = Math.floor(15 * 2.5 ** state.upgradeLevel);
+        if (state.energy < cost) return state;
 
-      return {
-        energy: state.energy - cost,
-        generatorSpeedLevel: newSpeedLevel,
-        generatorInterval: newInterval,
-      };
-    }),
+        const updated = {
+          energy: state.energy - cost,
+          energyPerClick: state.energyPerClick + 1,
+          upgradeLevel: state.upgradeLevel + 1,
+        };
+        saveToLocalStorage({ ...state, ...updated });
+        return updated;
+      }),
 
-  tick: () => {
-    const { autoEnergyPerSecond } = get();
-    if (autoEnergyPerSecond > 0) {
-      set((state) => ({
-        energy: state.energy + autoEnergyPerSecond,
-      }));
-    }
-  },
-}));
+    purchaseGenerator: () =>
+      set((state) => {
+        const cost = Math.floor(50 * 2.5 ** state.generatorLevel);
+        if (state.energy < cost) return state;
+
+        const updated = {
+          energy: state.energy - cost,
+          generatorLevel: state.generatorLevel + 1,
+          autoEnergyPerSecond: state.autoEnergyPerSecond + 1,
+        };
+        saveToLocalStorage({ ...state, ...updated });
+        return updated;
+      }),
+
+    purchaseGeneratorSpeed: () =>
+      set((state) => {
+        const cost = Math.floor(100 * 2.5 ** state.generatorSpeedLevel);
+        if (state.energy < cost) return state;
+
+        const newSpeedLevel = state.generatorSpeedLevel + 1;
+        const newInterval = Math.floor(1000 * 0.8 ** newSpeedLevel);
+
+        const updated = {
+          energy: state.energy - cost,
+          generatorSpeedLevel: newSpeedLevel,
+          generatorInterval: newInterval,
+        };
+        saveToLocalStorage({ ...state, ...updated });
+        return updated;
+      }),
+
+    tick: () => {
+      const { autoEnergyPerSecond } = get();
+      if (autoEnergyPerSecond > 0) {
+        set((state) => {
+          const updated = { energy: state.energy + autoEnergyPerSecond };
+          saveToLocalStorage({ ...state, ...updated });
+          return updated;
+        });
+      }
+    },
+  };
+});
