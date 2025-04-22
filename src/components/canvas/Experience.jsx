@@ -1,8 +1,10 @@
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stars } from '@react-three/drei';
-import StellarCore from '../components/visuals/StellarCore';
+import StellarCore from '../visuals/StellarCore';
+import ChargedRing from '../visuals/ChargedRing';
+import SparkBurst from '../visuals/SparkBurst';
 
-export default function Experience({ onClickCore }) {
+export default function Experience({ onClickCore, bursts, setBursts }) {
   return (
     <Canvas camera={{ position: [0, 0, 5], fov: 60 }} shadows gl={{ antialias: true }}>
       <color attach="background" args={['black']} />
@@ -27,9 +29,16 @@ export default function Experience({ onClickCore }) {
       </mesh>
 
       <StellarCore position={[0, 0, 0]} onClickCore={onClickCore} />
+      <ChargedRing radius={1.4} color="#00ffff" rotationSpeed={0.2} />
+      <ChargedRing radius={1.6} color="#00e0ff" rotationSpeed={-0.1} opacity={0.3} ringOffset={0.05} size={0.05} />
+      <ChargedRing radius={1.2} color="#00d2ff" rotationSpeed={0.3} opacity={0.25} ringOffset={-0.05} size={0.06} />
 
       <Stars radius={200} depth={100} count={8000} factor={6} fade />
       <OrbitControls enablePan={false} />
+
+      {bursts.map((b) => (
+        <SparkBurst key={b.id} position={b.position} onDone={() => setBursts((prev) => prev.filter((s) => s.id !== b.id))} />
+      ))}
     </Canvas>
   );
 }
