@@ -1,4 +1,6 @@
 export function formatNumber(value) {
+  if (typeof value !== 'number' || isNaN(value)) return 0;
+
   const suffixes = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc'];
   const tier = Math.floor(Math.log10(Math.abs(value)) / 3);
 

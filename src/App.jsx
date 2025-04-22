@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 import { formatNumber } from './utils/formatNumber';
 import ClickFeedback from './components/ui/ClickFeedback';
 import UpgradePanel from './components/panels/UpgradePanel';
+import DevTools from './components/panels/DevTools';
 
 function App() {
   const energy = useGameStore((state) => state.energy);
   const generatorInterval = useGameStore((state) => state.generatorInterval);
+  const hasDevAccess = import.meta.env.DEV || localStorage.getItem('devAccess') === 'true';
 
   const [clicks, setClicks] = useState([]);
 
@@ -56,9 +58,12 @@ function App() {
     <div id="game-root" className="h-screen w-screen relative overflow-hidden">
       <Experience onClickCore={spawnClickFeedback} />
 
-      <div className="absolute top-4 left-4 text-white text-xl font-bold bg-black/50 px-4 py-2 rounded">⚡ Cosmic Energy: {formatNumber(energy)}</div>
+      <div className="absolute top-4 left-4 text-white text-xl font-bold bg-black/50 px-4 py-2 rounded">
+        ⚡ Cosmic Energy: {typeof energy === 'number' ? formatNumber(energy) : 0}
+      </div>
 
       <UpgradePanel />
+      {hasDevAccess && <DevTools />}
 
       {clicks.map((c) => (
         <ClickFeedback

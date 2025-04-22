@@ -37,5 +37,6 @@ export const UPGRADE_CONFIG = {
       value: 'generatorInterval',
       action: 'purchaseGeneratorSpeed',
     },
+    unlockCondition: (state) => state.generatorLevel > 0,
   },
 };

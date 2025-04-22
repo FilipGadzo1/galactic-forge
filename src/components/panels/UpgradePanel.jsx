@@ -20,6 +20,9 @@ export default function UpgradePanel() {
           cost={u.cost}
           onClick={u.onClick}
           disabled={energy < u.cost}
+          icon={u.icon}
+          color={u.color}
+          nextValue={u.nextValue}
         />
       ))}
     </div>

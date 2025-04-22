@@ -3,6 +3,7 @@ import { createClickSlice } from './slices/clickSlice';
 import { createUpgradeSlice } from './slices/upgradeSlice';
 import { createGeneratorSlice } from './slices/generatorSlice';
 import { createTickSlice } from './slices/tickSlice';
+import { createDevSlice } from './slices/devSlice';
 
 const STORAGE_KEY = 'galactic-forge-save';
 
@@ -56,5 +57,6 @@ export const useGameStore = create((set, get) => {
     ...createUpgradeSlice(set, get),
     ...createGeneratorSlice(set, get),
     ...createTickSlice(set, get),
+    ...createDevSlice(set),
   };
 });
